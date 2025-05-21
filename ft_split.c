@@ -62,13 +62,13 @@ char	**ft_split(char *str)
 	return (strings);
 }
 
-int	main(void)
-{
-	char **strings = ft_split("12 11 10 9");
-	int i = 0;
- 	while (strings[i])
-		printf("%s\n", strings[i++]);
-	free(strings);
-	sleep(120);
-	return (0);
-}
+//int	main(void)
+//{
+//	char **strings = ft_split("12 11 10 9");
+//	int i = 0;
+// 	while (strings[i])
+//		printf("%s\n", strings[i++]);
+//	free(strings);
+//	sleep(120);
+//	return (0);
+//}

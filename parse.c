@@ -1,4 +1,5 @@
 #include "push_swap.h"
+#include <limits.h>
 
 int	is_valid_str(char *str)
 {
@@ -32,7 +33,7 @@ long	ft_atoi(char *str)
 	}
 	while (str[i] >= '0' && str[i] <= '9')
 		sum = sum * 10 + str[i] - '0';
-	return (sum *= sing);
+	return (sum *= sign);
 }
 
 int	is_valid_array(int *values, int max) 
@@ -40,16 +41,8 @@ int	is_valid_array(int *values, int max)
 	int	i;
 
 	i = -1;
-	while (++i < value)
+	while (++i < max)
 		if (values[i] > INT_MAX || values[i] < INT_MIN)
 			return (0);
 	return (1);
-}
-
-#include <stdio.h>
-
-int main ()
-{
-	printf("%d\n", is_valid_str(""));
-	printf("%d\n", is_valid_str(NULL));
 }
