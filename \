@@ -1,0 +1,93 @@
+#include "push_swap.h"
+#include <stdio.h>
+#include <unistd.h>
+
+void	rotate(int *stack, int total);
+void	swap(int *stack, int total);
+void	push(int *stack_a, int *stack_b, int size_a, int size_b);
+void	send_back(int *stack_a, int *stack_b, int total);
+int		find(int *stack, int size, int target);
+
+void	dance(int *stack_a, int *stack_b, int total)
+{
+	int b_elems;
+	int next;
+	int current;
+
+	push(stack_a, stack_b, total - 1, 0);
+	b_elems = 1;
+	while (b_elems < total)
+	{
+		next = find(stack_a, total, stack_b[b_elems - 1]);
+		current = stack_a[total - 1];
+		printf("TARGET: %d", stack_a[next]); 
+		if (next > total / 2)
+			while (current != stack_a[next])
+			{
+				write(1, "rotating\n", 9);
+				rotate(stack_a, total);
+			}
+		else
+			while (current != stack_a[next])
+			{
+				write(1, "reverse rotating\n", 17);
+				reverse_rotate(stack_a, total);
+			}
+		printf("pushing %d\n", stack_a[total - b_elems]);
+		push(stack_a, stack_b, total - b_elems, b_elems);
+		++b_elems;
+	}
+}
+
+void	send_back(int *stack_a, int *stack_b, int total)
+{
+	int	moves;
+
+	moves = 0;
+	while (moves < total)
+	{
+		push(stack_b, stack_a, total - moves, moves);
+		++moves;
+	}
+}
+
+int find(int *stack, int size, int target)
+{
+	int i;
+	int	temp;
+
+	i = 1;
+	temp = 0;
+	while (i < size)
+	{
+		if (stack[temp] - target > 0 && stack[i] - target > temp)
+			temp = i;
+		++i;
+	}
+	return (temp);
+} 
+
+int	main(void)
+{
+	int stack_a[] = {4, 2, 3, 11, 6};
+	int stack_b[5] = {0, 0, 0, 0, 0};
+
+	int i = 0;
+	while (i < 5)
+		printf("%d   ", stack_a[i++]);
+	printf("\n");
+	i = 0;
+	while (i < 1)
+		printf("%d   ", stack_b[i++]);
+	printf("\n");
+	dance(stack_a, stack_b, 5);
+	//push(stack_a, stack_b, 5, 0);
+	printf("\n");
+	i = 0;
+	while (i < 5)
+		printf("%d   ", stack_a[i++]);
+	printf("\n");
+	i = 0;
+	while (i < 5)
+		printf("%d   ", stack_b[i++]);
+}

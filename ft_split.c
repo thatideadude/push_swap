@@ -7,6 +7,7 @@ int	count_words(char *str)
 	int	i;
 	int	words;
 
+	words = 0;
 	i = 0;
 	while (str[i])
 	{

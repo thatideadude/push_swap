@@ -1,47 +1,61 @@
 #include "push_swap.h"
 #include <stdio.h>
+#include <unistd.h>
 
 void	rotate(int *stack, int total);
 void	swap(int *stack, int total);
 void	push(int *stack_a, int *stack_b, int size_a, int size_b);
-int		find(int move_a, int move_b, int move_c, int target);
 void	send_back(int *stack_a, int *stack_b, int total);
+int		find(int *stack, int size, int target);
 
 void	dance(int *stack_a, int *stack_b, int total)
 {
-	int		b_elems;
-	int		next;
+	int b_elems;
+	int next;
+	int current;
 
 	b_elems = 1;
-	push(stack_a, stack_b, total, b_elems - 1);
-	++b_elems;
-	++b_elems;
-	while (b_elems < total + 3)
+	push(stack_a, stack_b, total - b_elems, 0);
+	ft_printf("FIRST PUSH %d\n", stack_a[total - b_elems]);
+	while (b_elems < total)
 	{
+		write(1, "\n", 1);
 		int i = 0;
+		ft_printf("S T A C K _ A:    ");
+		while (i < total - b_elems)
+			ft_printf("%d  ", stack_a[i++]);
+		write(1, "\n", 1);
+		i = 0;
+		ft_printf("S T A C K _ B:    ");
 		while (i < total)
-			printf("%d | ", stack_a[i++]);
-		next = find(stack_a[total - b_elems], stack_a[total - b_elems - 1], stack_a[0], stack_b[b_elems - 1]);
-		printf("\nNEXT: %d\n", next);
-		if (next == stack_a[total - b_elems])
+			ft_printf("%d  ", stack_b[i++]);
+
+		next = find(stack_a, total - b_elems, stack_b[b_elems - 1]);
+		if (total - b_elems < 1)
+			next = 0;
+		if (next < stack_a[total - b_elems])
 		{
-			push(stack_a, stack_b, total, b_elems - 1);
-			printf("\nPUSH: %d\n", stack_a[total - 1]);
+			next = stack_a[next];
+			while (stack_a[total - b_elems] != next)
+			{
+		//		ft_printf("current = %d |||| next = %d\n", current, next);
+				ft_printf("...rotating\n");
+				rotate(stack_a, total - b_elems + 1);
+			}
 		}
-		else if (next == stack_a[total - b_elems - 1])
+		else
 		{
-			swap(stack_a, total);
-			push(stack_a, stack_b, total, b_elems - 1);
-			printf("\nSWAP: %d\n", stack_a[total - 1]);
+			next = stack_a[next];
+			while (stack_a[total - b_elems] != next)
+			{
+		//		ft_printf("current = %d |||| next = %d\n", current, next);
+				ft_printf("...reverse rotating\n");
+				reverse_rotate(stack_a, total - b_elems + 1);
+			}
 		}
-		else if (next == stack_a[0])
-		{
-			rotate(stack_a, total);
-			push(stack_a, stack_b, total, b_elems - 1);
-			printf("\nROTATE: %d\n", stack_a[total - 1]);
-		}
-		printf("\nb_elems = %d\n", b_elems);
-		++b_elems;	
+		ft_printf("PUSHING %d\n", stack_a[total - b_elems]);
+		push(stack_a, stack_b, total - b_elems, b_elems);
+		++b_elems;
 	}
 }
 
@@ -57,47 +71,48 @@ void	send_back(int *stack_a, int *stack_b, int total)
 	}
 }
 
-int find(int move_a, int move_b, int move_c, int target)
+int find(int *stack, int size, int target)
 {
-	if (move_a < move_b && move_a < move_c && move_a > 0)
+	int i;
+	int	temp;
+
+	i = 1;
+	temp = 0;
+	while (i < size)
 	{
-		printf("move_a");
-		return (move_a);
+		if (stack[i] - target > 0 && stack[i] - target < stack[temp] - target)
+		{	
+			ft_printf("-----------------------------------------------------");
+			temp = i;
+		}
+		++i;
 	}
-	if (move_b < move_a && move_b < move_c && move_b > 0)
-	{
-		printf("move_b");
-		return (move_b);
-	}
-	if (move_c < move_a && move_c < move_b && move_c > 0)
-	{
-		printf("move_c");
-		return (move_c);
-	}
-	return (target);
+	ft_printf("\nINPUT = %d", target);
+	ft_printf("\nRETURNING %d at position %d of %d\n", stack[temp], temp, size);
+	return (temp);
 } 
 
 int	main(void)
 {
-	int stack_a[] = {4, 2, 3, 11, 6};
-	int stack_b[5];
+	int size = 10;
+	int stack_a[] = {31, 2, 223, -111, 222, -6, 22, -9, 23, -8};
+	int stack_b[10] = {0, 0, 0, 0, 0, 0};
 
 	int i = 0;
-	while (i < 5)
-		printf("%d   ", stack_a[i++]);
-	printf("\n");
+	while (i < size)
+		ft_printf("%d   ", stack_a[i++]);
+	ft_printf("\n");
 	i = 0;
 	while (i < 1)
-		printf("%d   ", stack_b[i++]);
-	printf("\n");
-	dance(stack_a, stack_b, 5);
-	//push(stack_a, stack_b, 5, 0);
-	printf("\n");
+		ft_printf("%d   ", stack_b[i++]);
+	ft_printf("\n");
+	dance(stack_a, stack_b, size);
+	ft_printf("\n");
 	i = 0;
-	while (i < 5)
-		printf("%d   ", stack_a[i++]);
-	printf("\n");
+	while (i < size)
+		ft_printf("%d   ", stack_a[i++]);
+	ft_printf("\n");
 	i = 0;
-	while (i < 5)
-		printf("%d   ", stack_b[i++]);
+	while (i < size)
+		ft_printf("%d   ", stack_b[i++]);
 }

@@ -1,6 +1,6 @@
 void	push(int *stack_a, int *stack_b, int size_a, int size_b)
 {
-	stack_b[size_b] = stack_a[size_a - 1];
+	stack_b[size_b] = stack_a[size_a];
 }
 
 void	swap(int *stack, int total)
