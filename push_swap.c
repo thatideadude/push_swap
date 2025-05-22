@@ -1,6 +1,7 @@
 #include "push_swap.h"
 #include <stdio.h>
 #include <unistd.h>
+#include <limits.h>
 
 void	rotate(int *stack, int total);
 void	swap(int *stack, int total);
@@ -22,35 +23,38 @@ void	dance(int *stack_a, int *stack_b, int total)
 		write(1, "\n", 1);
 		int i = 0;
 		ft_printf("S T A C K _ A:    ");
-		while (i < total - b_elems)
+		while (i < total - b_elems + 1)
 			ft_printf("%d  ", stack_a[i++]);
 		write(1, "\n", 1);
 		i = 0;
 		ft_printf("S T A C K _ B:    ");
-		while (i < total)
+		while (i < b_elems)
 			ft_printf("%d  ", stack_b[i++]);
 
-		next = find(stack_a, total - b_elems, stack_b[b_elems - 1]);
+		ft_printf("total - b_elems = %d\n\n", total - b_elems);
+
+		next = find_afonso(stack_a, total - b_elems + 1, stack_b[b_elems - 1]);
 		if (total - b_elems < 1)
 			next = 0;
-		if (next < stack_a[total - b_elems])
+		if (next < (total - b_elems))
 		{
 			next = stack_a[next];
+			ft_printf("\nnext: %d\n", next);
 			while (stack_a[total - b_elems] != next)
 			{
 		//		ft_printf("current = %d |||| next = %d\n", current, next);
-				ft_printf("...rotating\n");
+				ft_printf("...rotating stack a\n");
 				rotate(stack_a, total - b_elems + 1);
 			}
 		}
 		else
 		{
 			next = stack_a[next];
-			while (stack_a[total - b_elems] != next)
+			while (stack_a[total - b_elems] < next)
 			{
 		//		ft_printf("current = %d |||| next = %d\n", current, next);
-				ft_printf("...reverse rotating\n");
-				reverse_rotate(stack_a, total - b_elems + 1);
+				ft_printf("...rotating b\n");
+				rotate(stack_b, total - b_elems + 1);
 			}
 		}
 		ft_printf("PUSHING %d\n", stack_a[total - b_elems]);
@@ -71,16 +75,40 @@ void	send_back(int *stack_a, int *stack_b, int total)
 	}
 }
 
+int abs(int a)
+{
+	return (((a < 0) * -a) + ((a >= 0) * a));
+}
+
+int find_afonso(int *stack, int size, int target)
+{
+	int mindiff = INT_MAX;
+	int i = 0;
+	int temp = 0;
+
+	while(i < size)
+	{
+		if(stack[i] > target && abs(stack[i] - target) < mindiff)
+		{
+			mindiff = abs(stack[i] - target);
+			temp = i;
+		}
+		++i;
+	}
+	ft_printf("\nINPUT = %d", target);
+	ft_printf("\nRETURNING %d at position %d of %d\n", stack[temp], temp, size);
+	return (temp);
+}
 int find(int *stack, int size, int target)
 {
 	int i;
 	int	temp;
 
-	i = 1;
+	i = 0;
 	temp = 0;
 	while (i < size)
 	{
-		if (stack[i] - target > 0 && stack[i] - target < stack[temp] - target)
+		if (stack[i] > target && stack[i] <= stack[temp])
 		{	
 			ft_printf("-----------------------------------------------------");
 			temp = i;
@@ -95,8 +123,8 @@ int find(int *stack, int size, int target)
 int	main(void)
 {
 	int size = 10;
-	int stack_a[] = {31, 2, 223, -111, 222, -6, 22, -9, 23, -8};
-	int stack_b[10] = {0, 0, 0, 0, 0, 0};
+	int stack_a[] = {31, 2, 223, 111, 222, 6, 22, 9, 23, 8};
+	int stack_b[10] = {0};
 
 	int i = 0;
 	while (i < size)
@@ -115,4 +143,5 @@ int	main(void)
 	i = 0;
 	while (i < size)
 		ft_printf("%d   ", stack_b[i++]);
+	rotate(stack_b, 3);
 }

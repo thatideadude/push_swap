@@ -1,7 +1,7 @@
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
 
-# include "../bonus_printf/ft_printf.h"
+# include "../bonus_printf/incs/ft_printf.h"
 
 char	**ft_split(char *str);
 void	push(int *stack_a, int *stack_b, int size_a, int size_b);
